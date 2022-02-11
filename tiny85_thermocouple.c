@@ -1,3 +1,5 @@
+#define __DELAY_BACKWARD_COMPATIBLE__ 1
+
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
@@ -9,14 +11,29 @@
 //macros
 #define sda_high() DDRB &= ~(1<<sda); //release sda, pulled high by oled chip
 #define sda_low() DDRB |= (1<<sda); //pulled low by tiny
-#define scl_high() DDRB &= ~(1<<sda);
+#define scl_high() DDRB &= ~(1<<scl);
 #define scl_low() DDRB |= (1<<scl);
 
 //init
 void i2c_init(void) {
   DDRB  &= ~((1<<sda)|(1<<scl));  //release both lines
   PORTB &= ~((1<<sda)|(1<<scl));  //both low
-}s
+}
+
+//data transfer
+void i2c_write(uint8_t dat){
+    for (uint8_t i = 8; i; i--){
+        sda_low();
+        if (dat & 0x80) sda_high(); //check if msb == 1, if so sda high
+        scl_high();
+        dat = dat << 1;
+        scl_low();
+    }
+    sda_high();
+    scl_high();
+    asm("nop"); 
+    scl_low();
+}
 
 //start condition
 void i2c_start(uint8_t addr){
@@ -32,21 +49,6 @@ void i2c_stop(){
     sda_high();
 }
 
-//data transfer
-void i2c_write(uint8_t dat){
-    for (uint8_t i = 8; i; i--){
-        sda_low();
-        if ((dat << i) & 0b10000000) sda_high(); //check if msb == 1, if so sda high
-        scl_high();
-        dat = dat << 1;
-        scl_low();
-    }
-    sda_high();
-    scl_high();
-    asm("nop"); 
-    scl_low();
-}
-
 /* communication with oled driver starts with i2c start condition -> 7bit slave address -> r/w bit -> ack bit is send by slave ->
     -> control byte (C0 | DC | 0 | 0 | 0 | 0 | 0 | 0) -> ack bit 
 
@@ -56,23 +58,23 @@ void i2c_write(uint8_t dat){
 
 */
 
-#define oled_addr 0b00111100 // 8bit, since r/w bit is included and always will be 0 -> read only
-#define oled_send_cmd 0b00000000 // command mode
-#define oled_send_data 0b01000000 // data mode
-#define oled_init_commands_len 6 // no. of commands to send
+#define oled_addr 0x78 // i2c address is 0x3C, but since we're adding additional r/w bit bit, which always will be 0 (read only) it becomes 0x3C*2 -> 0x78
+#define oled_send_cmd 0x00 // command mode
+#define oled_send_data 0x40 // data mode
 
-const uint8_t oled_init_commands[] PROGMEM = { //init cmds stored in FLASH
-    0xA8, 0x7F, // multiplexig ration
-    0x20, 0x00, // page addressing mode
-    0xA7,
-    0xAF        // entire display on
+const uint8_t oled_init_commands[] PROGMEM = {                  //init cmds stored in FLASH
+    0xAE,             // oled off
+    0x20, 0x00,       // set horizontal memory addressing mode, POR (whatever it is) = 0x00
+    0xA8, 0x7F,       // set multiplex 0x7F for 128x128px display (0x3F displays half a screen (64px), 0x1F displays 32px)
+    0xA5,             // every pixel on display on regardles of the display data RAM
+    0xAF,             // switch on OLED
 };
 
 void oled_init(void){
     i2c_init();
     i2c_start(oled_addr);
     i2c_write(oled_send_cmd);
-    for (uint8_t i = 0; i < oled_init_commands_len; i++) i2c_write(pgm_read_byte(&oled_init_commands[i]));
+    for (uint8_t i = 0; i < sizeof(oled_init_commands); i++) i2c_write(pgm_read_byte(&oled_init_commands[i]));
     i2c_stop();
 }
 
