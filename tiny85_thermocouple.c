@@ -108,7 +108,21 @@ void oled_clear(void){
     }
 }
 
+void oled_light_up(void){
+    for (uint8_t i = 0; i <= 127; i++){
+        for (uint8_t j = 0; j <= 15; j++){
+            oled_set_cursor(i, j);
+            oled_pixel_on();
+            _delay_ms(50);
+        }
+    }
+}
+
 int main(void){
     oled_init();
-    oled_clear();
+    while(1){
+        oled_clear();
+        _delay_ms(500);
+        oled_light_up();
+    }
 }
