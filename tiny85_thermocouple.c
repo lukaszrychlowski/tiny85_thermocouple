@@ -76,12 +76,12 @@ void oled_init(void){
     i2c_stop();
 }
 
-void oled_set_cursor(uint8_t x){
+void oled_set_cursor(uint8_t x, uint8_t y){     // x in range 0 - 127, y in range 0 - 15
     i2c_start(oled_addr);
     i2c_write(oled_send_cmd);
     i2c_write(x & 0b00001111);           // set lower col adress (last four bits of 0b00000000, 00H - 0FH (0b00001111))
     i2c_write(0b00010000 | (x >> 4));    // set higher col adress (last 3 bits of 0b00010000, 10H - 17H)
-    i2c_write(0xB0);                     // set page address (B0H - BFH)
+    i2c_write(0xB0 | y);                     // set page address (last 4 bits of 0b10110000, B0H - BFH, 15 pages)
     i2c_stop();
 }
 
@@ -90,7 +90,6 @@ void oled_pixel_on(void){
     i2c_write(oled_send_data);
     i2c_write(0xFF);
     i2c_stop();
-
 }
 
 void oled_pixel_off(void){
@@ -100,10 +99,16 @@ void oled_pixel_off(void){
     i2c_stop();
 }
 
-int main(void){
-    oled_init();
-    oled_set_cursor();
-    oled_pixel_off();
-    oled_pixel_on();
+void oled_clear(void){
+    for (uint8_t i = 0; i <= 127; i++){
+        for (uint8_t j = 0; j <= 15; j++){
+            oled_set_cursor(i, j);
+            oled_pixel_off();
+        }
+    }
 }
 
+int main(void){
+    oled_init();
+    oled_clear();
+}
