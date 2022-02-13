@@ -56,7 +56,7 @@ void i2c_stop(){
 
 */
 
-#define oled_addr 0x78 // i2c address is 0x3C, but since we're adding additional r/w bit bit, which always will be 0 (read only) it becomes 0x3C*2 -> 0x78
+#define oled_addr 0x78 // i2c address is 0x3C, we're adding rw bit == 0 (0x3C << 1 = 0x78)
 #define oled_send_cmd 0x00 // command mode
 #define oled_send_data 0x40 // data mode
 
@@ -79,9 +79,9 @@ void oled_init(void){
 void oled_set_cursor(uint8_t x){
     i2c_start(oled_addr);
     i2c_write(oled_send_cmd);
-    i2c_write(x & 0b00001111);           // set lower col adress (last for bits of 0b00000000, 00H - 0FH (0b00001111))
+    i2c_write(x & 0b00001111);           // set lower col adress (last four bits of 0b00000000, 00H - 0FH (0b00001111))
     i2c_write(0b00010000 | (x >> 4));    // set higher col adress (last 3 bits of 0b00010000, 10H - 17H)
-    i2c_write(0xB0);              // set page address (B0H - BFH)
+    i2c_write(0xB0);                     // set page address (B0H - BFH)
     i2c_stop();
 }
 
@@ -90,7 +90,7 @@ void oled_pixel_on(void){
     i2c_write(oled_send_data);
     i2c_write(0xFF);
     i2c_stop();
-    
+
 }
 
 void oled_pixel_off(void){
