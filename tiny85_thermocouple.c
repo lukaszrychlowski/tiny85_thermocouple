@@ -68,6 +68,19 @@ const uint8_t oled_init_commands[] PROGMEM = {                  //init cmds stor
     0xAF,             // switch on OLED
 };
 
+const uint8_t oled_font[] PROGMEM = {
+  0x3E, 0x51, 0x49, 0x45, 0x3E, // 0 16
+  0x00, 0x42, 0x7F, 0x40, 0x00, // 1 17
+  0x42, 0x61, 0x51, 0x49, 0x46, // 2 18
+  0x21, 0x41, 0x45, 0x4B, 0x31, // 3 19
+  0x18, 0x14, 0x12, 0x7F, 0x10, // 4 20
+  0x27, 0x45, 0x45, 0x45, 0x39, // 5 21
+  0x3C, 0x4A, 0x49, 0x49, 0x30, // 6 22
+  0x01, 0x71, 0x09, 0x05, 0x03, // 7 23
+  0x36, 0x49, 0x49, 0x49, 0x36, // 8 24
+  0x06, 0x49, 0x49, 0x29, 0x1E, // 9 25
+};
+
 void oled_init(void){
     i2c_init();
     i2c_start(oled_addr);
@@ -85,11 +98,11 @@ void oled_set_cursor(uint8_t x, uint8_t y){     // x in range 0 - 127, y in rang
     i2c_stop();
 }
 
-void oled_pixel_on(void){
-    i2c_start(oled_addr);
-    i2c_write(oled_send_data);
-    i2c_write(0xFF);
-    i2c_stop();
+void oled_print(char char){
+    uint16_t char_index = char - 32
+    i2c_write(0x00); 
+    for (uint8_t i = 0; i < 5; i++) i2c_write(pgm_read_byte(&oled_font[i]));
+        progmem_byte = pgm_read_byte(&oled_font[i]);
 }
 
 void oled_pixel_off(void){
@@ -98,6 +111,7 @@ void oled_pixel_off(void){
     i2c_write(0x00);
     i2c_stop();
 }
+
 
 void oled_clear(void){
     for (uint8_t i = 0; i <= 127; i++){
@@ -109,20 +123,22 @@ void oled_clear(void){
 }
 
 void oled_light_up(void){
-    for (uint8_t i = 0; i <= 127; i++){
-        for (uint8_t j = 0; j <= 15; j++){
+    for (uint8_t j = 0; j <= 15; j++){
+        _delay_ms(500);
+        for (uint8_t i = 0; i <= 127; i++){
             oled_set_cursor(i, j);
             oled_pixel_on();
-            _delay_ms(50);
         }
     }
 }
 
+void oled_print(void){
+
+}
+
 int main(void){
     oled_init();
-    while(1){
-        oled_clear();
-        _delay_ms(500);
-        oled_light_up();
-    }
+    oled_clear();
+    oled_set_cursor(0,0);
+    oled_print();
 }
