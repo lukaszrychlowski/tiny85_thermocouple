@@ -132,10 +132,6 @@ void oled_light_up(void){
     }
 }
 
-void oled_print(void){
-
-}
-
 int main(void){
     oled_init();
     oled_clear();
