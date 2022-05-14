@@ -69,25 +69,25 @@ const uint8_t oled_init_commands[] PROGMEM = {                  //init cmds stor
 };
 
 const uint8_t oled_font[][6] PROGMEM = {
-{ 0x3E, 0x51, 0x49, 0x45, 0x3E, 0x00 }, // 30
-{ 0x00, 0x42, 0x7F, 0x40, 0x00, 0x00 }, 
-{ 0x72, 0x49, 0x49, 0x49, 0x46, 0x00 }, 
-{ 0x21, 0x41, 0x49, 0x4D, 0x33, 0x00 }, 
-{ 0x18, 0x14, 0x12, 0x7F, 0x10, 0x00 }, 
-{ 0x27, 0x45, 0x45, 0x45, 0x39, 0x00 }, 
-{ 0x3C, 0x4A, 0x49, 0x49, 0x31, 0x00 }, 
-{ 0x41, 0x21, 0x11, 0x09, 0x07, 0x00 }, 
-{ 0x36, 0x49, 0x49, 0x49, 0x36, 0x00 }, 
-{ 0x46, 0x49, 0x49, 0x29, 0x1E, 0x00 },
-{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // Space
-{ 0x00, 0x06, 0x09, 0x06, 0x00, 0x00 }, // degree symbol = '`'
-{ 0x3E, 0x41, 0x41, 0x41, 0x22, 0x00 }, // C
-{ 0x08, 0x08, 0x08, 0x08, 0x08, 0x00 }, // -
+{ 0x3E, 0x51, 0x49, 0x45, 0x3E, 0x00 }, //0
+{ 0x00, 0x42, 0x7F, 0x40, 0x00, 0x00 }, //1
+{ 0x72, 0x49, 0x49, 0x49, 0x46, 0x00 }, //2
+{ 0x21, 0x41, 0x49, 0x4D, 0x33, 0x00 }, //3
+{ 0x18, 0x14, 0x12, 0x7F, 0x10, 0x00 }, //4
+{ 0x27, 0x45, 0x45, 0x45, 0x39, 0x00 }, //5
+{ 0x3C, 0x4A, 0x49, 0x49, 0x31, 0x00 }, //6
+{ 0x41, 0x21, 0x11, 0x09, 0x07, 0x00 }, //7
+{ 0x36, 0x49, 0x49, 0x49, 0x36, 0x00 }, //8
+{ 0x46, 0x49, 0x49, 0x29, 0x1E, 0x00 }, //9
+{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, //10 Space
+{ 0x00, 0x06, 0x09, 0x06, 0x00, 0x00 }, //11 degree symbol = '`'
+{ 0x3E, 0x41, 0x41, 0x41, 0x22, 0x00 }, //12 C
+{ 0x08, 0x08, 0x08, 0x08, 0x08, 0x00 }, //13 -
 };
-const int Space = 10;
-const int Degree = 11;
-const int Centigrade = 12;
-const int Minus = 12;
+const int space = 10;
+const int degree = 11;
+const int centigrade = 12;
+const int minus = 12;
 
 int scale = 1;
 
@@ -141,54 +141,66 @@ void oled_light_up(void){
     }
 }
 
-void oled_print_char(int c, int col, int line){
-    oled_set_cursor(line, col);
+void oled_print_char(int c){
+    //oled_set_cursor(line, col); // !!!!
     i2c_start(oled_addr);
     i2c_write(oled_send_data);
-    for (uint8_t column = 0; column < 6; column++){
-        int bits = pgm_read_byte(&oled_font[c][column]);
-        if (scale == 1) i2c_write(bits);
-        else {
-            bits = stretch(bits);
-            for (int i=2; i--;){
-                i2c_write(bits);
-                i2c_write(bits>>8);
-            }
-        }
+    for (uint8_t column = 0; column < 6; column++){         //for each byte making the digit
+        int bits = pgm_read_byte(&oled_font[c][column]);    //read corresponding bits
+        i2c_write(bits);                                    //send bits to oled
     }
     i2c_stop();
 }
 
-uint8_t digit(unsigned int number, unsigned int divisor){
-    return (number/divisor) % 10;
+uint8_t get_digit(unsigned int val, unsigned int div){      
+    /* assume val = 1234
+    div = 1000 -> val/div % 10 = 1.234 -> int 1                          
+    div = 100  -> val/div % 10 = 2.34 -> int 2
+    div = 10   -> val/div % 10 = 3.4 -> int 3                             
+    div = 1    -> val/div % 10 = 4 -> int 4
+    */                
+    return (val/div) % 10;       
 }
 
 void oled_print_temp(int temp, int col, int line){
-    unsigned int j = 1000;
-    if (temp < 0){
-        oled_print_char(Minus, col, line);
-        temp = -temp;
-        col = col + scale;
+    for (int i = 1000; i > 0; i = i / 10){
+        oled_set_cursor(col, line);
+        char digit = get_digit(temp, i);
+        oled_print_char(digit);
+        col = col + 8;
     }
-    for (int d=j; d>0; d=d/10){
-        char c = digit(temp, d);
-        if (c == 0 && d>1) c = Space;
-        oled_print_char(c, col, line);
-        col = col + scale;
-    }
-    oled_print_char(Degree, line, col); col = col + scale;
-    oled_print_char(Centigrade, col, line);
+    oled_set_cursor(col, line);
+    oled_print_char(degree);
+    col = col + 8;
+    oled_set_cursor(col, line);
+    oled_print_char(centigrade);
 }
+
+// void oled_print_temp(int temp, int col, int line){
+//     for (int i = 1000; i > 0; i = i / 10){
+//         char digit = get_digit(temp, i);
+//         if (digit == 0 && i > 1) digit = space;
+//         oled_set_cursor(line, col);
+//         oled_print_char(digit, col, line);
+//         col = col + 1;
+//     }
+//     oled_set_cursor(line, col);
+//     oled_print_char(degree, col, line);
+//     col = col + 1;
+//     oled_set_cursor(line, col);
+//     oled_print_char(centigrade, col, line);
+// }
 
 
 
 int main(void){
     oled_init();
     oled_clear();
-    int temps = 9;
+    int temp = 1234;
+    uint8_t j = 1;
     while(1){
-       oled_print_char(temps, 1, 1);
-        
+        oled_print_temp(temp, 8, 8);
+    
     }
 }
 
