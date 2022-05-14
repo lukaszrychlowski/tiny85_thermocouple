@@ -486,15 +486,15 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000      0xd2b
+.debug_info     0x0000000000000000      0xd2c
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x0000000000000000      0x420 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
- .debug_info    0x0000000000000420      0x84d tiny85_thermocouple.o
- .debug_info    0x0000000000000c6d       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
- .debug_info    0x0000000000000c93       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
- .debug_info    0x0000000000000cb9       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
- .debug_info    0x0000000000000cdf       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
- .debug_info    0x0000000000000d05       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
+ .debug_info    0x0000000000000420      0x84e tiny85_thermocouple.o
+ .debug_info    0x0000000000000c6e       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+ .debug_info    0x0000000000000c94       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
+ .debug_info    0x0000000000000cba       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
+ .debug_info    0x0000000000000ce0       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+ .debug_info    0x0000000000000d06       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
 
 .debug_abbrev   0x0000000000000000      0x6c3
  *(.debug_abbrev)
