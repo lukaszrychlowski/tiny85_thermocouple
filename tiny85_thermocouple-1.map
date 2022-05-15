@@ -2,6 +2,8 @@ Archive member included to satisfy reference by file (symbol)
 
 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
                               tiny85_thermocouple.o (__mulhi3)
+/usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+                              tiny85_thermocouple.o (__mulsi3)
 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
                               tiny85_thermocouple.o (__udivmodhi4)
 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
@@ -24,8 +26,14 @@ Discarded input sections
                 0x0000000000000000       0x34 tiny85_thermocouple.o
  .text.get_digit
                 0x0000000000000000        0xc tiny85_thermocouple.o
- .data.scale    0x0000000000000000        0x2 tiny85_thermocouple.o
- .rodata.minus  0x0000000000000000        0x2 tiny85_thermocouple.o
+ .text.readings_thermocouple_setup
+                0x0000000000000000       0x14 tiny85_thermocouple.o
+ .text.readings_thermocouple
+                0x0000000000000000        0x2 tiny85_thermocouple.o
+ .text.adc_to_temp
+                0x0000000000000000       0x96 tiny85_thermocouple.o
+ .text.ISR      0x0000000000000000        0x2 tiny85_thermocouple.o
+ .data.temp     0x0000000000000000       0x12 tiny85_thermocouple.o
  .rodata.centigrade
                 0x0000000000000000        0x2 tiny85_thermocouple.o
  .rodata.degree
@@ -45,6 +53,28 @@ Discarded input sections
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
  .text.libgcc.fixed
                 0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+ .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .data          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc.mul
+                0x0000000000000000       0x32 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc.div
+                0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc   0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc.prologue
+                0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc.builtins
+                0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc.fmul
+                0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .text.libgcc.fixed
+                0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .debug_line    0x0000000000000000       0xb5 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .debug_info    0x0000000000000000       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .debug_abbrev  0x0000000000000000       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .debug_aranges
+                0x0000000000000000       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
+ .debug_str     0x0000000000000000       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulsi3.o)
  .text          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
  .data          0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
  .bss           0x0000000000000000        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
@@ -226,7 +256,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0x2b0
+.text           0x0000000000000000      0x304
  *(.vectors)
  .vectors       0x0000000000000000       0x1e /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
                 0x0000000000000000                __vectors
@@ -243,37 +273,37 @@ END GROUP
  *libc.a:*(.progmem.data)
  *(.progmem.*)
  .progmem.data.oled_font
-                0x000000000000001e       0x54 tiny85_thermocouple.o
+                0x000000000000001e       0x4e tiny85_thermocouple.o
                 0x000000000000001e                oled_font
  .progmem.data.oled_init_commands
-                0x0000000000000072        0x7 tiny85_thermocouple.o
-                0x0000000000000072                oled_init_commands
-                0x000000000000007a                . = ALIGN (0x2)
- *fill*         0x0000000000000079        0x1 
+                0x000000000000006c        0x7 tiny85_thermocouple.o
+                0x000000000000006c                oled_init_commands
+                0x0000000000000074                . = ALIGN (0x2)
+ *fill*         0x0000000000000073        0x1 
  *(.lowtext)
  *(.lowtext*)
-                0x000000000000007a                __ctors_start = .
+                0x0000000000000074                __ctors_start = .
  *(.ctors)
-                0x000000000000007a                __ctors_end = .
-                0x000000000000007a                __dtors_start = .
+                0x0000000000000074                __ctors_end = .
+                0x0000000000000074                __dtors_start = .
  *(.dtors)
-                0x000000000000007a                __dtors_end = .
+                0x0000000000000074                __dtors_end = .
  SORT_BY_NAME(*)(.ctors)
  SORT_BY_NAME(*)(.dtors)
  *(.init0)
- .init0         0x000000000000007a        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
-                0x000000000000007a                __init
+ .init0         0x0000000000000074        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
+                0x0000000000000074                __init
  *(.init0)
  *(.init1)
  *(.init1)
  *(.init2)
- .init2         0x000000000000007a        0xc /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
+ .init2         0x0000000000000074        0xc /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
  *(.init2)
  *(.init3)
  *(.init3)
  *(.init4)
- .init4         0x0000000000000086       0x16 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
-                0x0000000000000086                __do_copy_data
+ .init4         0x0000000000000080       0x16 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
+                0x0000000000000080                __do_copy_data
  *(.init4)
  *(.init5)
  *(.init5)
@@ -284,75 +314,81 @@ END GROUP
  *(.init8)
  *(.init8)
  *(.init9)
- .init9         0x000000000000009c        0x4 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
+ .init9         0x0000000000000096        0x4 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
  *(.init9)
  *(.text)
- .text          0x00000000000000a0        0x2 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
-                0x00000000000000a0                __vector_10
-                0x00000000000000a0                __vector_12
-                0x00000000000000a0                __bad_interrupt
-                0x00000000000000a0                __vector_6
-                0x00000000000000a0                __vector_3
-                0x00000000000000a0                __vector_11
-                0x00000000000000a0                __vector_13
-                0x00000000000000a0                __vector_7
-                0x00000000000000a0                __vector_5
-                0x00000000000000a0                __vector_4
-                0x00000000000000a0                __vector_9
-                0x00000000000000a0                __vector_2
-                0x00000000000000a0                __vector_8
-                0x00000000000000a0                __vector_14
-                0x00000000000000a0                __vector_1
-                0x00000000000000a2                . = ALIGN (0x2)
+ .text          0x000000000000009a        0x2 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
+                0x000000000000009a                __vector_10
+                0x000000000000009a                __vector_12
+                0x000000000000009a                __bad_interrupt
+                0x000000000000009a                __vector_6
+                0x000000000000009a                __vector_3
+                0x000000000000009a                __vector_11
+                0x000000000000009a                __vector_13
+                0x000000000000009a                __vector_7
+                0x000000000000009a                __vector_5
+                0x000000000000009a                __vector_4
+                0x000000000000009a                __vector_9
+                0x000000000000009a                __vector_2
+                0x000000000000009a                __vector_8
+                0x000000000000009a                __vector_14
+                0x000000000000009a                __vector_1
+                0x000000000000009c                . = ALIGN (0x2)
  *(.text.*)
  .text.i2c_init
-                0x00000000000000a2        0xe tiny85_thermocouple.o
-                0x00000000000000a2                i2c_init
+                0x000000000000009c        0xe tiny85_thermocouple.o
+                0x000000000000009c                i2c_init
  .text.i2c_write
-                0x00000000000000b0       0x1c tiny85_thermocouple.o
-                0x00000000000000b0                i2c_write
+                0x00000000000000aa       0x1c tiny85_thermocouple.o
+                0x00000000000000aa                i2c_write
  .text.i2c_start
-                0x00000000000000cc        0x6 tiny85_thermocouple.o
-                0x00000000000000cc                i2c_start
+                0x00000000000000c6        0x6 tiny85_thermocouple.o
+                0x00000000000000c6                i2c_start
  .text.i2c_stop
-                0x00000000000000d2        0x8 tiny85_thermocouple.o
-                0x00000000000000d2                i2c_stop
+                0x00000000000000cc        0x8 tiny85_thermocouple.o
+                0x00000000000000cc                i2c_stop
  .text.oled_init
-                0x00000000000000da       0x28 tiny85_thermocouple.o
-                0x00000000000000da                oled_init
+                0x00000000000000d4       0x28 tiny85_thermocouple.o
+                0x00000000000000d4                oled_init
  .text.oled_set_cursor
-                0x0000000000000102       0x2c tiny85_thermocouple.o
-                0x0000000000000102                oled_set_cursor
+                0x00000000000000fc       0x2c tiny85_thermocouple.o
+                0x00000000000000fc                oled_set_cursor
  .text.oled_pixel_off
-                0x000000000000012e        0xe tiny85_thermocouple.o
-                0x000000000000012e                oled_pixel_off
+                0x0000000000000128        0xe tiny85_thermocouple.o
+                0x0000000000000128                oled_pixel_off
  .text.oled_clear
-                0x000000000000013c       0x22 tiny85_thermocouple.o
-                0x000000000000013c                oled_clear
+                0x0000000000000136       0x22 tiny85_thermocouple.o
+                0x0000000000000136                oled_clear
  .text.oled_print_char
-                0x000000000000015e       0x3a tiny85_thermocouple.o
-                0x000000000000015e                oled_print_char
+                0x0000000000000158       0x3a tiny85_thermocouple.o
+                0x0000000000000158                oled_print_char
  .text.oled_print_temp
-                0x0000000000000198       0x90 tiny85_thermocouple.o
-                0x0000000000000198                oled_print_temp
+                0x0000000000000192       0x90 tiny85_thermocouple.o
+                0x0000000000000192                oled_print_temp
+ .text.readings_internal_setup
+                0x0000000000000222       0x14 tiny85_thermocouple.o
+                0x0000000000000222                readings_internal_setup
+ .text.readings_internal
+                0x0000000000000236        0xe tiny85_thermocouple.o
+                0x0000000000000236                readings_internal
  .text.startup.main
-                0x0000000000000228       0x14 tiny85_thermocouple.o
-                0x0000000000000228                main
+                0x0000000000000244       0x4c tiny85_thermocouple.o
+                0x0000000000000244                main
  .text.libgcc.mul
-                0x000000000000023c       0x22 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
-                0x000000000000023c                __mulhi3
+                0x0000000000000290       0x22 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+                0x0000000000000290                __mulhi3
  .text.libgcc.div
-                0x000000000000025e       0x28 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
-                0x000000000000025e                __udivmodhi4
+                0x00000000000002b2       0x28 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x00000000000002b2                __udivmodhi4
  .text.libgcc.div
-                0x0000000000000286       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
-                0x0000000000000286                __divmodhi4
-                0x0000000000000286                _div
-                0x00000000000002ac                . = ALIGN (0x2)
+                0x00000000000002da       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
+                0x00000000000002da                __divmodhi4
+                0x00000000000002da                _div
+                0x0000000000000300                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00000000000002ac        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
-                0x00000000000002ac                exit
-                0x00000000000002ac                _exit
+ .fini9         0x0000000000000300        0x0 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+                0x0000000000000300                exit
+                0x0000000000000300                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -371,17 +407,17 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00000000000002ac        0x4 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+ .fini0         0x0000000000000300        0x4 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
  *(.fini0)
  *(.hightext)
  *(.hightext*)
  *(.progmemx.*)
-                0x00000000000002b0                . = ALIGN (0x2)
+                0x0000000000000304                . = ALIGN (0x2)
  *(.jumptables)
  *(.jumptables*)
-                0x00000000000002b0                _etext = .
+                0x0000000000000304                _etext = .
 
-.data           0x0000000000800060        0x0 load address 0x00000000000002b0
+.data           0x0000000000800060        0x0 load address 0x0000000000000304
                 0x0000000000800060                PROVIDE (__data_start = .)
  *(.data)
  *(.data*)
@@ -399,8 +435,8 @@ END GROUP
  *(.bss*)
  *(COMMON)
                 [!provide]                        PROVIDE (__bss_end = .)
-                0x00000000000002b0                __data_load_start = LOADADDR (.data)
-                0x00000000000002b0                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000000000000304                __data_load_start = LOADADDR (.data)
+                0x0000000000000304                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0000000000800060        0x0
                 [!provide]                        PROVIDE (__noinit_start = .)
@@ -468,72 +504,72 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x0000000000000000      0x128
+.debug_aranges  0x0000000000000000      0x150
  *(.debug_aranges)
  .debug_aranges
-                0x0000000000000000       0x88 tiny85_thermocouple.o
+                0x0000000000000000       0xb0 tiny85_thermocouple.o
  .debug_aranges
-                0x0000000000000088       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+                0x00000000000000b0       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
  .debug_aranges
-                0x00000000000000a8       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
+                0x00000000000000d0       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
  .debug_aranges
-                0x00000000000000c8       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
+                0x00000000000000f0       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
  .debug_aranges
-                0x00000000000000e8       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+                0x0000000000000110       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
  .debug_aranges
-                0x0000000000000108       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
+                0x0000000000000130       0x20 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x0000000000000000      0xd2c
+.debug_info     0x0000000000000000      0xe8e
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x0000000000000000      0x420 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
- .debug_info    0x0000000000000420      0x84e tiny85_thermocouple.o
- .debug_info    0x0000000000000c6e       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
- .debug_info    0x0000000000000c94       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
- .debug_info    0x0000000000000cba       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
- .debug_info    0x0000000000000ce0       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
- .debug_info    0x0000000000000d06       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
+ .debug_info    0x0000000000000420      0x9b0 tiny85_thermocouple.o
+ .debug_info    0x0000000000000dd0       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+ .debug_info    0x0000000000000df6       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
+ .debug_info    0x0000000000000e1c       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
+ .debug_info    0x0000000000000e42       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+ .debug_info    0x0000000000000e68       0x26 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
 
-.debug_abbrev   0x0000000000000000      0x6c3
+.debug_abbrev   0x0000000000000000      0x739
  *(.debug_abbrev)
  .debug_abbrev  0x0000000000000000      0x3e8 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
- .debug_abbrev  0x00000000000003e8      0x277 tiny85_thermocouple.o
- .debug_abbrev  0x000000000000065f       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
- .debug_abbrev  0x0000000000000673       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
- .debug_abbrev  0x0000000000000687       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
- .debug_abbrev  0x000000000000069b       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
- .debug_abbrev  0x00000000000006af       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
+ .debug_abbrev  0x00000000000003e8      0x2ed tiny85_thermocouple.o
+ .debug_abbrev  0x00000000000006d5       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+ .debug_abbrev  0x00000000000006e9       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
+ .debug_abbrev  0x00000000000006fd       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
+ .debug_abbrev  0x0000000000000711       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+ .debug_abbrev  0x0000000000000725       0x14 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
 
-.debug_line     0x0000000000000000      0xc25
+.debug_line     0x0000000000000000      0xedf
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x0000000000000000       0x1d /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
- .debug_line    0x000000000000001d      0x8c1 tiny85_thermocouple.o
- .debug_line    0x00000000000008de       0xbb /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
- .debug_line    0x0000000000000999       0xcd /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
- .debug_line    0x0000000000000a66       0xc7 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
- .debug_line    0x0000000000000b2d       0x61 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
- .debug_line    0x0000000000000b8e       0x97 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
+ .debug_line    0x000000000000001d      0xb7b tiny85_thermocouple.o
+ .debug_line    0x0000000000000b98       0xbb /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+ .debug_line    0x0000000000000c53       0xcd /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
+ .debug_line    0x0000000000000d20       0xc7 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
+ .debug_line    0x0000000000000de7       0x61 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+ .debug_line    0x0000000000000e48       0x97 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
 
-.debug_frame    0x0000000000000000      0x170
+.debug_frame    0x0000000000000000      0x1e0
  *(.debug_frame)
- .debug_frame   0x0000000000000000      0x170 tiny85_thermocouple.o
+ .debug_frame   0x0000000000000000      0x1e0 tiny85_thermocouple.o
 
-.debug_str      0x0000000000000000      0x475
+.debug_str      0x0000000000000000      0x4fa
  *(.debug_str)
  .debug_str     0x0000000000000000      0x169 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/../../../../../../avr/lib/avr25/crtattiny85.o
- .debug_str     0x0000000000000169      0x287 tiny85_thermocouple.o
-                                        0x2cb (size before relaxing)
- .debug_str     0x00000000000003f0       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
- .debug_str     0x0000000000000475       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
- .debug_str     0x0000000000000475       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
- .debug_str     0x0000000000000475       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
- .debug_str     0x0000000000000475       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
+ .debug_str     0x0000000000000169      0x30c tiny85_thermocouple.o
+                                        0x350 (size before relaxing)
+ .debug_str     0x0000000000000475       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_mulhi3.o)
+ .debug_str     0x00000000000004fa       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_udivmodhi4.o)
+ .debug_str     0x00000000000004fa       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_divmodhi4.o)
+ .debug_str     0x00000000000004fa       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_exit.o)
+ .debug_str     0x00000000000004fa       0x85 /usr/local/Cellar/avr-gcc@9/9.3.0_3/lib/avr-gcc/9/gcc/avr/9.3.0/avr25/libgcc.a(_copy_data.o)
 
-.debug_loc      0x0000000000000000      0x417
+.debug_loc      0x0000000000000000      0x6f4
  *(.debug_loc)
- .debug_loc     0x0000000000000000      0x417 tiny85_thermocouple.o
+ .debug_loc     0x0000000000000000      0x6f4 tiny85_thermocouple.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -553,9 +589,9 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x0000000000000000       0xc8
+.debug_ranges   0x0000000000000000      0x120
  *(.debug_ranges)
- .debug_ranges  0x0000000000000000       0xc8 tiny85_thermocouple.o
+ .debug_ranges  0x0000000000000000      0x120 tiny85_thermocouple.o
 
 .debug_addr
  *(.debug_addr)

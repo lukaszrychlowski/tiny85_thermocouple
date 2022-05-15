@@ -1,6 +1,9 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include <avr/pgmspace.h>
+#include <avr/sleep.h>
+
+//////// I2C ///////////////////////////////////////////////
 
 //pins
 #define sda PB0
@@ -47,6 +50,8 @@ void i2c_stop(){
     sda_high();
 }
 
+//////// OlED ///////////////////////////////////////////////
+
 /* communication with oled driver starts with i2c start condition -> 7bit slave address -> r/w bit -> ack bit is send by slave ->
     -> control byte (C0 | DC | 0 | 0 | 0 | 0 | 0 | 0) -> ack bit 
 
@@ -86,8 +91,6 @@ const uint8_t oled_font[][6] PROGMEM = {
 const int space = 10;
 const int degree = 11;
 const int centigrade = 12;
-
-int scale = 1;
 
 void oled_init(void){
     i2c_init();
@@ -140,7 +143,6 @@ void oled_light_up(void){
 }
 
 void oled_print_char(int c){
-    //oled_set_cursor(line, col); // !!!!
     i2c_start(oled_addr);
     i2c_write(oled_send_data);
     for (uint8_t column = 0; column < 6; column++){         //for each byte making the digit
@@ -174,17 +176,62 @@ void oled_print_temp(int temp, int col, int line){
     oled_print_char(centigrade);
 }
 
+//////// READINGS ///////////////////////////////////////////////
 
 
+void readings_internal_setup(){
+    ADMUX = 0<<REFS2 | 2<<REFS0 | 15<<MUX0;  // Temperature and 1.1V reference
+    ADCSRA = 1<<ADEN | 1<<ADIE | 4<<ADPS0;   // Enable ADC, interrupt, 62.5kHz clock
+    ADCSRB = 0<<ADTS0;                       // Free running
+    set_sleep_mode(SLEEP_MODE_ADC);
+}
+unsigned int readings_internal(){
+    sleep_enable();
+    sleep_cpu();
+    return ADC;
+}
+
+void readings_thermocouple_setup(){
+    ADMUX = 0b00000000 << REFS2 | 0b00000010 << REFS0 | 0b00000111 << MUX0;
+    ADCSRA = 0b00000001 << ADEN | 0b00000001 << ADIE | 0b00000100 << ADPS0;
+    ADCSRB = 0b00000000 << ADTS0;
+    set_sleep_mode(SLEEP_MODE_ADC);
+}
+
+unsigned int readings_thermocouple(){
+    sleep_enable();
+    sleep_cpu();
+    return ADC;
+}
+
+int temp[9] = { 0, 1684, 3370, 4995, 6613, 8269, 9993, 11805, 13751 };
+
+int adc_to_temp(int adc){
+    int n = adc >> 9;
+    unsigned int diff = temp[n+1] - temp[n];
+    unsigned int prop = adc - (n << 9);
+    unsigned int extra = ((unsigned long)prop * diff) >> 9;
+    return (temp[n] + extra + 5) / 10;
+}
+
+ISR(ADC_vect){
+
+}
 
 int main(void){
     oled_init();
     oled_clear();
-    int temp = 1234;
-    uint8_t j = 1;
+    readings_internal_setup();
+    int internal_temp = readings_internal();
     while(1){
-        oled_print_temp(temp, 42, 8);
-    
+
+        int internal_temp = 0;
+        for (int i=0; i<16; i++){
+            internal_temp = internal_temp + readings_internal();
+        }
+        internal_temp = internal_temp / 16 - 256;
+        oled_print_temp(internal_temp, 3, 6);
+        _delay_ms(1000);
     }
 }
 
