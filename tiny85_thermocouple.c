@@ -2,6 +2,7 @@
 #include <util/delay.h>
 #include <avr/pgmspace.h>
 #include <avr/sleep.h>
+#include <avr/interrupt.h>
 
 //////// I2C ///////////////////////////////////////////////
 
@@ -103,8 +104,8 @@ void oled_init(void){
 void oled_set_cursor(uint8_t x, uint8_t y){     // x in range 0 - 127, y in range 0 - 15
     i2c_start(oled_addr);
     i2c_write(oled_send_cmd);
-    i2c_write(x & 0b00001111);           // set lower col adress (last four bits of 0b00000000, 00H - 0FH (0b00001111))
-    i2c_write(0b00010000 | (x >> 4));    // set higher col adress (last 3 bits of 0b00010000, 10H - 17H)
+    i2c_write(x & 0b00001111);                 // set lower col adress (last four bits of 0b00000000, 00H - 0FH (0b00001111))
+    i2c_write(0b00010000 | (x >> 4));         // set higher col adress (last 3 bits of 0b00010000, 10H - 17H)
     i2c_write(0xB0 | y);                     // set page address (last 4 bits of 0b10110000, B0H - BFH, 15 pages)
     i2c_stop();
 }
@@ -180,15 +181,16 @@ void oled_print_temp(int temp, int col, int line){
 
 
 void readings_internal_setup(){
-    ADMUX = 0<<REFS2 | 2<<REFS0 | 15<<MUX0;  // Temperature and 1.1V reference
-    ADCSRA = 1<<ADEN | 1<<ADIE | 4<<ADPS0;   // Enable ADC, interrupt, 62.5kHz clock
-    ADCSRB = 0<<ADTS0;                       // Free running
-    set_sleep_mode(SLEEP_MODE_ADC);
+    ADMUX = 0b10001111; //1.1V ref, left adjust, ADC4 for temp measurement 
+    ADCSRA = 0b11001100;
+    ADCSRB = 0b00000000;                      
+    MCUCR = 0b00001000; // adc noise reduction mode
 }
 unsigned int readings_internal(){
-    sleep_enable();
-    sleep_cpu();
-    return ADC;
+    MCUCR = MCUCR << 0b001000000;
+    int reading_adc = ADC;
+    MCUCR = 0b00001000;
+    return reading_adc;
 }
 
 void readings_thermocouple_setup(){
@@ -214,23 +216,16 @@ int adc_to_temp(int adc){
     return (temp[n] + extra + 5) / 10;
 }
 
-ISR(ADC_vect){
-
-}
 
 int main(void){
     oled_init();
     oled_clear();
     readings_internal_setup();
-    int internal_temp = readings_internal();
+    // int internal_temp = readings_internal();
     while(1){
-
-        int internal_temp = 0;
-        for (int i=0; i<16; i++){
-            internal_temp = internal_temp + readings_internal();
-        }
-        internal_temp = internal_temp / 16 - 256;
-        oled_print_temp(internal_temp, 3, 6);
+        int internal_temp = readings_internal() - 272;
+        oled_print_temp(internal_temp, 0, 0);
+        oled_print_temp()
         _delay_ms(1000);
     }
 }
