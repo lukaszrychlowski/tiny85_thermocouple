@@ -218,15 +218,20 @@ int adc_to_temp(int adc){
 
 
 int main(void){
+    //temp conversion T[C] = T_measured - 272
     oled_init();
     oled_clear();
     readings_internal_setup();
-    // int internal_temp = readings_internal();
+
     while(1){
-        int internal_temp = readings_internal() - 272;
+        int internal_temp = readings_internal();
+        internal_temp = 0;
+        for (int i=0;i<32;i++) internal_temp = internal_temp + (readings_internal() - 272);
+        internal_temp = internal_temp / 32;
         oled_print_temp(internal_temp, 0, 0);
-        oled_print_temp()
         _delay_ms(1000);
-    }
+    } 
 }
+
+
 
