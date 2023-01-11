@@ -182,7 +182,7 @@ void oled_print_temp(int temp, int col, int line){
 
 unsigned int readings_internal(){
     ADMUX = 0b10001111; // 1.1v ref, left adjust, internal temp sensor
-    ADCSRA = 0b11000000; // ADC enable, prescaler div factor 2
+    ADCSRA = 0b11000100; // ADC enable, prescaler div factor 2
     while(!(ADCSRA & (1 << ADIF))); //wait for adc to be ready
         ADCSRA |= (1 << ADIF);
         return ADC;
@@ -194,7 +194,7 @@ unsigned int readings_internal(){
 
 unsigned int readings_thermocouple(){
     ADMUX = 0b10000111; // 1.1v ref, adlar def., 20x adc gain pb3 pb4
-    ADCSRA = 0b11000000;  // ADC enable, ADC interrupt enable, prescaler div factor 2
+    ADCSRA = 0b11000100;  // ADC enable, ADC interrupt enable, prescaler div factor 2
     //MCUCR = (1 << SE) | (1 << SM0); //sleep enable, adc noise reduction mode
     //sleep_enable();
     // __asm__ __volatile__ ( "sleep" :: ); //put cpu to sleep
@@ -216,30 +216,29 @@ int adc_to_temp(int adc){
 int main(void){
     oled_init(); 
     oled_clear();
-    //SREG = 0b10000000;
 
     while(1){
-
-    //internal reading
-    //readings_internal_setup();
-    //readings_internal();
     float internal_temp = 0;
     readings_internal();
     for(uint8_t i=0;i<99;i++) internal_temp = internal_temp + readings_internal();
     internal_temp = internal_temp / 99;
     internal_temp = 0.8929 * internal_temp - 258.52;
     internal_temp = (int)internal_temp;
-
     oled_print_temp(internal_temp,0,0);
+
+    float thermocouple_temp = 0;
+    readings_thermocouple();
+    for(uint8_t i=0;i<99;i++) thermocouple_temp = thermocouple_temp + readings_thermocouple();
+    thermocouple_temp = thermocouple_temp / 99;
+    //thermocouple_temp = 0.8929 * thermocouple_temp - 258.52;
+    thermocouple_temp = (int)thermocouple_temp;
+    oled_print_temp(thermocouple_temp, 0, 5);
 
 
     //thermocouple
     //readings_thermocouple_setup();
     //readings_thermocouple();
-    uint16_t thermocouple_temp = readings_thermocouple();
-    //for(uint8_t j=0;j<16;j++) thermocouple_temp = thermocouple_temp + readings_internal();
-    //thermocouple_temp = thermocouple_temp / 16;
-    oled_print_temp(thermocouple_temp, 0, 5);
+
 
     } 
 }
