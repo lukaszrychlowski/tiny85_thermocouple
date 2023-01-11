@@ -1,1 +1,5 @@
 testing.py
+tiny85_thermocouple.elf
+tiny85_thermocouple.map
+tiny85_thermocouple.o
+tiny85_thermocouple.hex

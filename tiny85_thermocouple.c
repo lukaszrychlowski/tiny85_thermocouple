@@ -180,35 +180,30 @@ void oled_print_temp(int temp, int col, int line){
 //////// READINGS ///////////////////////////////////////////////
 
 
-void readings_internal_setup(){
-    ADMUX = 0b10001111; // 1.1v ref,  adlar def., internal temp sensor
-    //ADMUX = 0 << REFS2 | 2 << REFS0 | 15 << MUX0; //1.1V ref, left adjust, ADC4 for temp measurement 
-    //ADCSRA = 1 << ADEN | 1 << ADIE | 4 << ADPS0; //ADC enable, ADC interrupt enable,
-    ADCSRA = 0b10001110; // ADC enable, ADC interrupt enable, prescaler div factor 64
-    ADCSRB = 0;                 
-    //set_sleep_mode(SLEEP_MODE_ADC);
-}
 unsigned int readings_internal(){
-    MCUCR = (1 << SE) | (1 << SM0); //sleep enable, adc noise reduction mode
+    ADMUX = 0b10001111; // 1.1v ref, left adjust, internal temp sensor
+    ADCSRA = 0b11000000; // ADC enable, prescaler div factor 2
+    while(!(ADCSRA & (1 << ADIF))); //wait for adc to be ready
+        ADCSRA |= (1 << ADIF);
+        return ADC;
+            //MCUCR = 0b00101000; //sleep enable, adc noise reduction mode
     //sleep_enable();
-     __asm__ __volatile__ ( "sleep" :: ); //put cpu to sleep
-    return ADC;
+    //__asm__ __volatile__ ( "sleep" :: ); //put cpu to sleep
 }
 
-void readings_thermocouple_setup(){
-    ADMUX = 0b10000111; // 1.1v ref, adlar def., 20x adc gain pb3 pb4
-    ADCSRA = 0b10001110;  // ADC enable, ADC interrupt enable, prescaler div factor 64
-    ADCSRB = 0;   
-}
 
 unsigned int readings_thermocouple(){
-    MCUCR = (1 << SE) | (1 << SM0); //sleep enable, adc noise reduction mode
+    ADMUX = 0b10000111; // 1.1v ref, adlar def., 20x adc gain pb3 pb4
+    ADCSRA = 0b11000000;  // ADC enable, ADC interrupt enable, prescaler div factor 2
+    //MCUCR = (1 << SE) | (1 << SM0); //sleep enable, adc noise reduction mode
     //sleep_enable();
-     __asm__ __volatile__ ( "sleep" :: ); //put cpu to sleep
-    return ADC;
+    // __asm__ __volatile__ ( "sleep" :: ); //put cpu to sleep
+    while(!(ADCSRA & (1 << ADIF))); //wait for adc to be ready
+        ADCSRA |= (1 << ADIF);
+        return ADC;
 }
 
-//////// VOLTAGE - TEMP CONVERTION ///////////////////////////////////////////////
+//////// ADC - TEMP CONVERTION ///////////////////////////////////////////////
 int temp[9] = {0, 1684, 3370, 4995, 6613, 8269, 9993, 11805, 13751};
 int adc_to_temp(int adc){
     int n = adc >> 9;
@@ -218,39 +213,34 @@ int adc_to_temp(int adc){
     return (temp[n] + extra + 5)/10;
 }
 
-
-ISR(ADC_vect){
-    
-}
-
-const int internal_offset = -17;
-const int adc_offset =-7;
-int j = 0;
 int main(void){
     oled_init(); 
     oled_clear();
-    SREG = 0b10000000;
+    //SREG = 0b10000000;
 
     while(1){
+
     //internal reading
-    readings_internal_setup();
+    //readings_internal_setup();
+    //readings_internal();
+    float internal_temp = 0;
     readings_internal();
-    int internal_temp = 0;
-    for(int i=0;i<16;i++) internal_temp = internal_temp + readings_internal();
-    internal_temp = (internal_temp >> 4) - 276 + internal_offset;
+    for(uint8_t i=0;i<99;i++) internal_temp = internal_temp + readings_internal();
+    internal_temp = internal_temp / 99;
+    internal_temp = 0.8929 * internal_temp - 258.52;
+    internal_temp = (int)internal_temp;
+
     oled_print_temp(internal_temp,0,0);
 
 
     //thermocouple
-    readings_thermocouple_setup();
-    readings_thermocouple();
-    int thermocouple_temp = 0;
-    for(int j=0;j<16;j++) thermocouple_temp = thermocouple_temp + readings_internal();
-    thermocouple_temp = adc_to_temp(thermocouple_temp >> 2) + adc_offset*4;
-    //thermocouple_temp = (thermocouple_temp >> 4) - 256;
-    oled_print_temp(thermocouple_temp + internal_temp, 0, 5);
-    
-    _delay_ms(1000);
+    //readings_thermocouple_setup();
+    //readings_thermocouple();
+    uint16_t thermocouple_temp = readings_thermocouple();
+    //for(uint8_t j=0;j<16;j++) thermocouple_temp = thermocouple_temp + readings_internal();
+    //thermocouple_temp = thermocouple_temp / 16;
+    oled_print_temp(thermocouple_temp, 0, 5);
+
     } 
 }
 
