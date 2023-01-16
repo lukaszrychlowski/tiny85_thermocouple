@@ -3,3 +3,7 @@ tiny85_thermocouple.elf
 tiny85_thermocouple.map
 tiny85_thermocouple.o
 tiny85_thermocouple.hex
+i2c.o
+oled.o
+.gitignore
+.vscode/settings.json

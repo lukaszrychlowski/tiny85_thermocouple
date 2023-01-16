@@ -1,58 +1,3 @@
-#include <avr/io.h>
-#include <util/delay.h>
-#include <avr/pgmspace.h>
-#include <avr/sleep.h>
-#include <avr/interrupt.h>
-
-//////// I2C ///////////////////////////////////////////////
-
-//pins
-#define sda PB0
-#define scl PB2
-
-//macros
-#define sda_high() DDRB &= ~(1<<sda);                                //release sda, pulled high by oled chip
-#define sda_low() DDRB |= (1<<sda);                                  //pulled low by tiny
-#define scl_high() DDRB &= ~(1<<scl);
-#define scl_low() DDRB |= (1<<scl);
-
-//init
-void i2c_init(void) {
-  DDRB  &= ~((1<<sda)|(1<<scl));                                     //release both lines
-  PORTB &= ~((1<<sda)|(1<<scl));                                     //both low
-}
-
-//data transfer
-void i2c_write(uint8_t dat){
-    for (uint8_t i = 8; i; i--){
-        sda_low();
-        if (dat & 0b10000000) sda_high();                            //check if msb == 1, if so sda high
-        scl_high();
-        dat = dat << 1;
-        scl_low();
-    }
-    sda_high();
-    scl_high();
-    asm("nop"); 
-    scl_low();
-}
-
-//start condition
-void i2c_start(uint8_t addr){
-    sda_low();
-    scl_low();
-    i2c_write(addr);
-}
-
-//stop condition
-void i2c_stop(){
-    sda_low();
-    scl_high();
-    sda_high();
-}
-
-//////// OlED ///////////////////////////////////////////////
-
 /* communication with oled driver starts with i2c start condition -> 7bit slave address -> r/w bit -> ack bit is send by slave ->
     -> control byte (C0 | DC | 0 | 0 | 0 | 0 | 0 | 0) -> ack bit 
 
@@ -61,12 +6,15 @@ void i2c_stop(){
     if DC = 1, data byte is for RAM operation
 
 */
+#include <avr/io.h>
+#include <util/delay.h>
+#include <avr/pgmspace.h>
+#include <avr/sleep.h>
+#include <avr/interrupt.h>
+#include "i2c.h"
+#include "oled.h"
 
-#define oled_addr 0x78                                          // i2c address is 0x3C, we're adding rw bit = 0 (0x3C << 1 = 0x78)
-#define oled_send_cmd 0x00                                      // oled command mode
-#define oled_send_data 0x40                                     // oled data mode
-
-const uint8_t oled_init_commands[] PROGMEM = {                  //init cmds stored in FLASH
+const uint8_t oled_init_commands[] PROGMEM = {           //init cmds stored in FLASH
     0xAE,                                                       // oled off
     0x20, 0x00,                                                 // set horizontal memory addressing mode, POR (whatever it is) = 0x00
     0xA8, 0x7F,                                                 // set multiplex 0x7F for 128x128px display (0x3F displays half a screen (64px), 0x1F displays 32px)
@@ -176,52 +124,3 @@ void oled_print_temp(int temp, int col, int line){
     oled_set_cursor(col, line);
     oled_print_char(centigrade);
 }
-
-//////// READINGS ///////////////////////////////////////////////
-
-
-unsigned int readings_internal(){
-    ADMUX = 0b10001111;                                         // 1.1v ref, internal temp sensor
-    ADCSRA = 0b11000000;                                        // ADC enable, ADC start conversion, prescaler div factor 2
-    while(!(ADCSRA & (1 << ADIF)));                             //wait for adc to be ready
-        ADCSRA |= (1 << ADIF);
-        return ADC;
-    //MCUCR = 0b10101000;                                       //sleep enable, adc noise reduction mode
-    //__asm__ __volatile__ ( "sleep" :: );                      //put cpu to sleep
-}
-
-
-unsigned int readings_thermocouple(){
-    ADMUX = 0b10000111;                                         // 1.1v ref, 20x adc gain pb3 pb4
-    ADCSRA = 0b11000000;                                        // ADC enable, ADC start convertion, prescaler div factor 2
-    while(!(ADCSRA & (1 << ADIF)));                             //wait for adc to be ready
-        ADCSRA |= (1 << ADIF);
-        return ADC;
-}
-
-int main(void){
-    oled_init();                                                //init display
-    oled_clear();                                               //clear display memory
-
-    while(1){
-    float internal_temp = 0;
-    readings_internal();
-    for(uint8_t i=0;i<99;i++) internal_temp = internal_temp + readings_internal();       //oversampling overkill
-    internal_temp = internal_temp / 99;
-    internal_temp = 0.8929 * internal_temp - 258.52;                                     //interpolation
-    internal_temp = (int)internal_temp;                                                  //get rid of decimals
-    oled_print_temp(internal_temp,0,0);                                                  
-
-    float thermocouple_temp = 0;
-    readings_thermocouple();
-    for(uint8_t i=0;i<99;i++) thermocouple_temp = thermocouple_temp + readings_thermocouple();
-    thermocouple_temp = thermocouple_temp / 99;
-    thermocouple_temp = (int)thermocouple_temp;
-    oled_print_temp(thermocouple_temp, 0, 5);
-
-
-    } 
-}
-
-
-
