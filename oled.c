@@ -73,10 +73,12 @@ void oled_pixel_on(void){
 }
 
 void oled_clear(void){
+    i2c_init();
     for (uint8_t i = 0; i <= 127; i++){
         for (uint8_t j = 0; j <= 15; j++){
             oled_set_cursor(i, j);
             oled_pixel_off();
+            //_delay_ms(100);
         }
     }
 }
@@ -101,6 +103,59 @@ void oled_print_char(int c){
     i2c_stop();
 }
 
+
+int oled_stretch (int x) {
+  x = (x & 0xF0) << 4 | (x & 0x0F);
+  x = (x << 2 | x) & 0x3333;
+  x = (x << 1 | x) & 0x5555;
+  return x | x << 1;
+}
+
+void oled_print_big_char(int temp, int col, int line){                              //TODO: refactor big_char function
+
+    int col0 = col;
+    int line0 = line;
+    uint8_t font_size = 3;
+
+    for (int i = 1000; i > 0; i = i / 10){
+        oled_set_cursor(col, line);
+        char digit = get_digit(temp, i);
+        i2c_start(oled_addr);
+        i2c_write(oled_send_data);
+        for (uint8_t column = 0; column < 6; column++){                               //for each byte making the digit
+            int bits = oled_stretch(pgm_read_byte(&oled_font[digit][column]));        //read corresponding bits        
+            for (uint8_t j = 0; j < font_size; j++) i2c_write(bits);
+        }
+        i2c_stop();
+
+        line = line + 1;
+        //col = col0;
+        oled_set_cursor(col, line);
+        i2c_start(oled_addr);
+        i2c_write(oled_send_data);
+
+        for (uint8_t column = 0; column < 6; column++){                               //for each byte making the digit
+            int bits = oled_stretch(pgm_read_byte(&oled_font[digit][column]));        //read corresponding bits        
+            for (uint8_t k = 0; k < font_size; k++) i2c_write(bits>>8);
+        }
+        i2c_stop();
+        col = col + 6*font_size;
+        line = line - 1;
+}
+
+}
+// void oled_print_big_temp(int temp, int col, int line){
+//     for (int i = 1000; i > 0; i = i / 10){
+//         oled_set_cursor(col, line);
+//         char digit = get_digit(temp, i);
+//         oled_print_big_char(digit);
+//         //line = line + 1;
+//         //oled_print_big_char(digit);
+//         //col = col + 16;
+// }
+// }
+
+
 uint8_t get_digit(unsigned int val, unsigned int div){      
     /* assume val = 1234
     div = 1000 -> val/div % 10 = 1.234 -> int 1                          
@@ -124,3 +179,4 @@ void oled_print_temp(int temp, int col, int line){
     oled_set_cursor(col, line);
     oled_print_char(centigrade);
 }
+

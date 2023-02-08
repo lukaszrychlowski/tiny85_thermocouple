@@ -16,4 +16,7 @@ void oled_light_up(void);
 void oled_print_char(int);
 uint8_t get_digit(unsigned int, unsigned int);
 void oled_print_temp(int, int, int);
+int oled_stretch(int);
+void oled_print_big_char(int, int, int);
+void oled_print_big_temp(int, int, int);
 #endif

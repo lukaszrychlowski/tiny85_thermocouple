@@ -7,3 +7,6 @@ i2c.o
 oled.o
 .gitignore
 .vscode/settings.json
+.vscode/tasks.json
+main.o
+pid.o

@@ -7,9 +7,6 @@
 #include "oled.h"
 
 
-//////// READINGS ///////////////////////////////////////////////
-
-
 unsigned int readings_internal(){
     ADMUX = 0b10001111;                                         // 1.1v ref, internal temp sensor
     ADCSRA = 0b11000000;                                        // ADC enable, ADC start conversion, prescaler div factor 2
@@ -36,18 +33,18 @@ int main(void){
     while(1){
     float internal_temp = 0;
     readings_internal();
-    for(uint8_t i=0;i<32;i++) internal_temp = internal_temp + readings_internal();       //oversampling overkill
+    for(uint8_t i=0;i<32;i++) internal_temp = internal_temp + readings_internal();       //oversampling
     internal_temp = internal_temp / 32;
-    internal_temp = 0.8929 * internal_temp - 258.52;                                     //interpolation
+    internal_temp = 0.8929 * internal_temp - 258.52;                                     //interpolation with offset correction
     internal_temp = (int)internal_temp;                                                  //get rid of decimals
-    oled_print_temp(internal_temp,0,0);                                                  
+    oled_print_big_char(internal_temp,0,0);                                                  
 
     float thermocouple_temp = 0;
     readings_thermocouple();
     for(uint8_t i=0;i<32;i++) thermocouple_temp = thermocouple_temp + readings_thermocouple();
     thermocouple_temp = thermocouple_temp / 32;
     thermocouple_temp = (int)thermocouple_temp;
-    oled_print_temp(thermocouple_temp, 0, 5);
+    oled_print_big_char(thermocouple_temp, 0, 8);
     _delay_ms(1000);
 
     } 
